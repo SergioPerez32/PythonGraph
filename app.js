@@ -1,37 +1,25 @@
 const express = require('express');
-let { PythonShell } = require('python-shell');
-const fs = require('fs');
+const bodyParser = require('body-parser');
+const PythonShellService = require('./infrastructure/externalServices/pythonShell');
+const PythonService = require('./application/pythonService');
+const PythonController = require('./presentation/controllers/pythonController');
+const pythonRoutes = require('./presentation/routes/pythonRoutes');
 
 const app = express();
 const port = 3000;
-app.use(express.text());
 
-app.post('/python-to-image', async (req, res) => {
-  const pythonCode = req.body;
-  const tempPythonFile = 'temp.py';
-  fs.writeFileSync(tempPythonFile, pythonCode);
-  const options = {
-    scriptPath: __dirname,
-    args: []
-  };
-  PythonShell.run(tempPythonFile, options)
-    .then(() => {
-      const imageFile = 'image.png';
-      try {
-        const image = fs.readFileSync(imageFile);
-        res.status(201).contentType('image/png').send(image);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error reading image file' });
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: 'Error executing Python code' });
-    });
-});
+// Middleware
+app.use(bodyParser.text());
 
+// Dependency Injection
+// const pythonShellService = new PythonShellService();
+const pythonService = new PythonService();
+const pythonController = new PythonController(pythonService);
 
+// Routes
+app.use('/python-to-image', pythonRoutes(pythonController));
+
+// Start server
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
