@@ -64,6 +64,10 @@ jobs:
           mv image.png $GITHUB_WORKSPACE/diagram.png
         fi
 
+    - name: Check if diagram.png exists
+      run: |
+          ls -l $GITHUB_WORKSPACE/diagram.png
+
     - name: Upload artifacts
       if: success() && always() # Run this step only if the previous steps were successful
       uses: actions/upload-artifact@v2
