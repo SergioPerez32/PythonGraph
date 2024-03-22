@@ -69,8 +69,8 @@ jobs:
           ls -l $GITHUB_WORKSPACE/diagram.png
 
     - name: Upload artifacts
-      if: success() && always() # Run this step only if the previous steps were successful
+      if: success() && always() # Only run if previous steps were successful
       uses: actions/upload-artifact@v2
       with:
           name: diagrams
-          path: $GITHUB_WORKSPACE/diagram.png
+          path: ${{ github.workspace }}/diagram.png
