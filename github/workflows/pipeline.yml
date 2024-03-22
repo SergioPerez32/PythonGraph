@@ -13,3 +13,7 @@ jobs:
       docker:
         image: nikolaik/python-nodejs:latest
         options: --privileged
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
