@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const PythonShellService = require('./infrastructure/externalServices/pythonShell');
+const PythonShellService = require('./infrastructure/pythonShell');
 const PythonService = require('./application/pythonService');
 const PythonController = require('./presentation/controllers/pythonController');
 const pythonRoutes = require('./presentation/routes/pythonRoutes');
