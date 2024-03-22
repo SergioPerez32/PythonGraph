@@ -1,0 +1,15 @@
+name: Pipeline
+
+on:
+  push:
+    branches:
+      - onion
+      jobs:
+
+build:
+  runs-on: ubuntu-latest
+    
+  services:
+      docker:
+        image: nikolaik/python-nodejs:latest
+        options: --privileged
