@@ -42,6 +42,11 @@ jobs:
         echo '            Pod("pod2"),' >> python_code.py
         echo '            Pod("pod3")] << ReplicaSet("rs") << Deployment("dp") << HPA("hpa")' >> python_code.py
 
+
+    - name: check GraphViz
+      run: dot -V   
+      
+      
     - name: Send Python code
       run: |
         curl -X POST -H "Content-Type: text/plain" --data-binary @python_code.py http://localhost:3000/python-to-image
