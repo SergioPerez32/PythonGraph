@@ -24,7 +24,29 @@ jobs:
         npm install -g graphviz
     - name: Start server
       run: (node app.js &) && sleep 5
+    - name: Create Python code file
+      run: |
+        echo 'from diagrams import Diagram' > python_code.py
+        echo 'from diagrams.k8s.clusterconfig import HPA' >> python_code.py
+        echo 'from diagrams.k8s.compute import Deployment, Pod, ReplicaSet' >> python_code.py
+        echo 'from diagrams.k8s.network import Ingress, Service' >> python_code.py
+        echo '' >> python_code.py
+        echo 'with Diagram("image", show=False):' >> python_code.py
+        echo '    net = Ingress("domain.com") >> Service("svc")' >> python_code.py
+        echo '    net >> [Pod("pod1"),' >> python_code.py
+        echo '            Pod("pod2"),' >> python_code.py
+        echo '            Pod("pod3")] << ReplicaSet("rs") << Deployment("dp") << HPA("hpa")' >> python_code.py
+
     - name: Send Python code
       run: |
-        python_code='from diagrams import Diagram\nfrom diagrams.k8s.clusterconfig import HPA\nfrom diagrams.k8s.compute import Deployment, Pod, ReplicaSet\nfrom diagrams.k8s.network import Ingress, Service\n\nwith Diagram("image", show=False):\n    net = Ingress("domain.com") >> Service("svc")\n    net >> [Pod("pod1"),\n            Pod("pod2"),\n            Pod("pod3")] << ReplicaSet("rs") << Deployment("dp") << HPA("hpa")'
-        echo $python_code | curl -X POST -H "Content-Type: text/plain" --data-binary @- http://localhost:3000/python-to-image
+        curl -X POST -H "Content-Type: text/plain" --data-binary @python_code.py http://localhost:3000/python-to-image
+        - name: Save generated image
+        run: mv image.png $GITHUB_WORKSPACE/diagram.png
+  
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+          name: diagrams
+          path: |
+            $GITHUB_WORKSPACE/diagram.png
+            $GITHUB_WORKSPACE/python_code.py
