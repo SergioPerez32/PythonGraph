@@ -54,9 +54,17 @@ jobs:
     - name: Send Python code
       run: |
         curl -X POST -H "Content-Type: text/plain" --data-binary @python_code.py http://localhost:3000/python-to-image
-        - name: Save generated image
-        run: mv image.png $GITHUB_WORKSPACE/diagram.png
-  
+
+    - name: Wait for image file
+      run: |
+        sleep 10 # Adjust the sleep time according to your application's behavior
+
+    - name: Save generated image
+      run: |
+        if test -f "image.png"; then
+          mv image.png $GITHUB_WORKSPACE/diagram.png
+        fi
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
