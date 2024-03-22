@@ -22,10 +22,11 @@ jobs:
       run: |
         npm install
         npm install -g graphviz
+        sudo apt install graphviz
     
     - name: Add Graphviz to PATH
       run: echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
-      
+
     - name: Install Python dependencies
       run: |
           pip install diagrams
