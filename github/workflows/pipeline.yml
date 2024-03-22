@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - onion
-      jobs:
 
-build:
-  runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
     
-  services:
+    services:
       docker:
         image: nikolaik/python-nodejs:latest
         options: --privileged
